@@ -1,21 +1,26 @@
 import React, { useState, Fragment } from 'react';
+import axios from 'axios';
 
 const Todo = () => {
         const [todoState, setTodoState] = useState({userInput:"", todoList: [] });
 
     const inputChangeHanddler = event => {
         setTodoState({
-            userInput: event.target.value, 
-            todoList: todoState.todoList
+            ...todoState,
+            userInput: event.target.value
         });
     }
 
     const todoAddHandler = () => {
        setTodoState({
-           userInput: todoState.userInput,
+           ...todoState,
            todoList: todoState.todoList.concat(todoState.userInput)
        })
+       axios.post('https://todo-b218c.firebaseio.com/todos.json', {name: todoState.userInput})
+       .then(res => console.log(res))
+       .catch(err => console.log(err))
     }
+    
     return (
         <Fragment>
             <input type="text" value={todoState.userInput} onChange={inputChangeHanddler} />
